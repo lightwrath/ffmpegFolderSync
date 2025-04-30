@@ -1,9 +1,12 @@
 import FileSystem from "./FileSystem.ts";
 import Queue from "./Queue.ts";
+import Conversion from "./Conversion.ts";
 import Config from "./Config.ts";
 
 export default class Controller {
     public static queue = new Queue();
+    public static failureList = new Queue();
+    public static processingQueue = false
     
     public static async load(syncLocation: string) {
         const loadSettings = Config.get().syncLocations.find(location => location.name === syncLocation);
@@ -21,6 +24,26 @@ export default class Controller {
             console.error("Can't add to queue", source, target);
         }
         this.printQueue()
+    }
+    
+    public static async start() {
+        this.processingQueue = true
+        while (this.processingQueue) {
+            const next = this.queue.getNext()
+            const conversion = new Conversion(next.source, next.target)
+            try {
+                const isVerified = await conversion.validate()
+                if (!isVerified) throw new Error("Source file seems to be invalid.")
+                await conversion.execute()
+                this.queue.handleNext()
+            } catch (_) {
+                this.failureList.add(this.queue.getNext().source, this.queue.handleNext().target)
+            }
+        }
+    }
+    
+    public static stop() {
+        this.processingQueue = false
     }
     
     public static printQueue() {
