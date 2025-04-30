@@ -1,0 +1,29 @@
+import FileSystem from "./FileSystem.ts";
+import Queue from "./Queue.ts";
+import Config from "./Config.ts";
+
+export default class Controller {
+    public static queue = new Queue();
+    
+    public static async load(syncLocation: string) {
+        const loadSettings = Config.get().syncLocations.find(location => location.name === syncLocation);
+        if (!loadSettings) throw new Error("Is not a valid sync location!");
+        const { source, target } = loadSettings;
+        const pathType = await FileSystem.type(source)
+        if (pathType === "directory") {
+            const files = await FileSystem.lsFilesRecursive(source)
+            files.forEach(file => {
+                this.queue.add(file, FileSystem.pathSourceToTarget(source, target, file))
+            });
+        } else if (pathType === "file") {
+            this.queue.add(source, target);
+        } else {
+            console.error("Can't add to queue", source, target);
+        }
+        this.printQueue()
+    }
+    
+    public static printQueue() {
+        console.log(this.queue.get())
+    }
+}

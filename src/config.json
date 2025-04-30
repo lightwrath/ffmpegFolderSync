@@ -1,0 +1,9 @@
+{
+  "syncLocations": [
+    {
+      "name": "primary",
+      "source": "/some/legacy/location",
+      "target": "/where/the/files/will/go/after"
+    }
+  ]
+}
