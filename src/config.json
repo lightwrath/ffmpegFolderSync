@@ -1,10 +1,10 @@
 {
-  "ffmpegPath": "/mnt/pve/ssd/lightwrath/Code/ffmpeg/ffmpeg_source/ffmpeg",
+  "ffmpegPath": "/mnt/pve/Vault/Users/lightwrath/Code/ffmpeg/ffmpeg_source/ffmpeg",
   "syncLocations": [
     {
       "name": "primary",
-      "source": "/mnt/pve/ssd/lightwrath/Code/ffmpeg/queue",
-      "target": "/mnt/pve/ssd/lightwrath/Code/ffmpeg/complete"
+      "source": "/mnt/pve/Vault/Users/lightwrath/Code/ffmpeg/queue",
+      "target": "/mnt/pve/Vault/Users/lightwrath/Code/ffmpeg/complete"
     }
   ]
 }
