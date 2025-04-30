@@ -1,4 +1,3 @@
-
 export default class Process {
     private subprocess: Bun.Subprocess
     

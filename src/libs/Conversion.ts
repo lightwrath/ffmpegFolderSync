@@ -1,4 +1,5 @@
 import Process from "./Process.ts";
+import Config from "./Config.ts";
 
 export default class Conversion {
     private sourceFile: string;
@@ -10,10 +11,15 @@ export default class Conversion {
         this.targetFile = targetFile;
     }
     
+    private getFfmpeg() {
+        if (Config.get().ffmpegPath) return`${Config.get().ffmpegPath}/ffmpeg`
+        return "ffmpeg"
+    }
+    
     public async execute() {
         const commandSegments: Array<string> = [];
         
-        commandSegments.push("ffmpeg")
+        commandSegments.push(this.getFfmpeg())
         commandSegments.push("-i")
         commandSegments.push(this.sourceFile)
         
@@ -34,7 +40,7 @@ export default class Conversion {
     }
     
     public async validate() {
-        const process = new Process(["ffmpeg", "-i", this.sourceFile, this.targetFile]);
+        const process = new Process([this.getFfmpeg(), "-i", this.sourceFile, this.targetFile]);
         return process.hasError()
     }
 }

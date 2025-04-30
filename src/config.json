@@ -1,4 +1,5 @@
 {
+  "ffmpegPath": "/some/path/with/ffmpeg/bin",
   "syncLocations": [
     {
       "name": "primary",

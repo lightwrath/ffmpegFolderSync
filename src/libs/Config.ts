@@ -22,7 +22,8 @@ class Config {
 }
 
 interface IConfig {
-    syncLocations: Array<ISyncLocation>
+    ffmpegPath?: string;
+    syncLocations: Array<ISyncLocation>;
 }
 interface ISyncLocation {
     name: string;
