@@ -2,17 +2,18 @@ import { readdir } from "node:fs/promises"
 
 export default class FileSystem {
     public static async type(path: string) {
-        console.log(path);
+        let error: unknown | null = null
         try {
             await readdir(path)
             return "directory"
         } catch (e) {
-            console.error(e)
+            error = e
         }
         const file = Bun.file(path)
         if (await file.exists()) {
             return "file"
         }
+        console.error(error)
         return "unknown"
     }
 
