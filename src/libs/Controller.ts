@@ -71,8 +71,8 @@ export default class Controller {
             const location = locationArray.join("/")
             return {
                 location,
-                source: "..." + entry.source.replace(location, ""),
-                target: "..." + entry.target.replace(location, ""),
+                source: entry.source.replace(location, ""),
+                target: entry.target.replace(location, ""),
                 deleteSource: entry.deleteSource
             }
         })
@@ -82,7 +82,11 @@ export default class Controller {
                 console.log(`${printLine.location}:`)
                 previousLocation = printLine.location
             }
-            console.log(`${index}: ${printLine.source} => ${printLine.target} (delete source: ${printLine.deleteSource})`)
+            // Limit the lenth to a total 120
+            const printIndex = index.toString().padStart(4, "0") + ": " //len 6
+            const printSource = printLine.source.substring(0, 49)
+            const printTarget = printLine.source.substring(0, 49)
+            console.log(`${printIndex}: ${printSource} => ${printTarget} - ${printLine.deleteSource}`)
         })
     }
 }
