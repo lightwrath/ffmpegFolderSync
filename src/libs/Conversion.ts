@@ -49,8 +49,9 @@ export default class Conversion {
         return process.awaitExit()
     }
 
-    public async validate() {
-        const process = new Process([this.getFfmpeg(), "-v", "error", "-i", this.sourceFile, "-f", "null", "-", "2>&2"]);
-        return process.hasError()
+    public async isValid() {
+        const process = new Process([this.getFfmpeg(), "-v", "error", "-i", this.sourceFile, "-f", "null", "-"]);
+        const errorResult = await process.hasError()
+        return !errorResult;
     }
 }
