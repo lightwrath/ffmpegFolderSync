@@ -83,10 +83,10 @@ export default class Controller {
                 previousLocation = printLine.location
             }
             // Limit the length to a total 120
-            const printIndex = index.toString().padStart(4, "0") + ": " //len 6
+            const printIndex = index.toString().padStart(4, "0") + ":"
             const printSource = printLine.source.substring(0, 49)
             const printTarget = printLine.source.substring(0, 49)
-            console.log(printIndex, printSource, " => ", printTarget, " - ", printLine.deleteSource)
+            console.log(printIndex, printSource, "=>", printTarget, "-", printLine.deleteSource)
         })
     }
 }
