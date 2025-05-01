@@ -50,7 +50,7 @@ export default class Conversion {
     }
 
     public async validate() {
-        const process = new Process([this.getFfmpeg(), "-i", this.sourceFile, this.targetFile]);
+        const process = new Process([this.getFfmpeg(), "-v", "error", "-i", this.sourceFile, "-f", "null", "-", "2"]);
         return process.hasError()
     }
 }
