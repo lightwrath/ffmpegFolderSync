@@ -22,13 +22,26 @@ export default class Conversion {
         commandSegments.push("-i")
         commandSegments.push(this.sourceFile)
 
-        commandSegments.push("-c:v libsvtav1");
-        commandSegments.push("-c:a copy")
-        commandSegments.push("-c:s copy")
-        commandSegments.push("-map 0")
-        commandSegments.push("-pix_fmt yuv444p101e")
-        commandSegments.push("-preset 4")
-        commandSegments.push("-crf 16")
+        commandSegments.push("-c:v");
+        commandSegments.push("libsvtav1");
+
+        commandSegments.push("-c:a")
+        commandSegments.push("copy")
+
+        commandSegments.push("-c:s")
+        commandSegments.push("copy")
+
+        commandSegments.push("-map")
+        commandSegments.push("0")
+
+        commandSegments.push("-pix_fmt")
+        commandSegments.push("yuv444p101e")
+
+        commandSegments.push("-preset")
+        commandSegments.push("4")
+
+        commandSegments.push("-crf")
+        commandSegments.push("16")
 
         commandSegments.push(this.targetFile)
 
