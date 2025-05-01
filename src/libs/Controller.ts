@@ -51,6 +51,31 @@ export default class Controller {
     }
 
     public static printQueue() {
-        console.table(this.queue.get())
+        interface ITableFormat {
+            location: string;
+            source: string;
+            target: string;
+            deleteSource: boolean;
+        }
+        const printQueue: Array<ITableFormat> = this.queue.get().map(entry => {
+            const sourceArray = entry.source.split("/")
+            const targetArray = entry.target.split("/")
+            let locationArray = []
+            for (let i = 0; i < sourceArray.length; i++) {
+               if (sourceArray[i] === targetArray[i]) {
+                   locationArray.push(sourceArray[i])
+               } else {
+                   break;
+               }
+            }
+            const location = locationArray.join("/")
+            return {
+                location,
+                source: "..." + entry.source.replace(location, ""),
+                target: "..." + entry.target.replace(location, ""),
+                deleteSource: entry.deleteSource
+            }
+        })
+        console.table(printQueue)
     }
 }
