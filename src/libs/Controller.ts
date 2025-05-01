@@ -76,6 +76,13 @@ export default class Controller {
                 deleteSource: entry.deleteSource
             }
         })
-        console.table(printQueue)
+        let previousLocation = ""
+        printQueue.forEach((printLine, index) => {
+            if (printLine.location !== previousLocation) {
+                console.log(`${printLine.location}:`)
+                previousLocation = printLine.location
+            }
+            console.log(`${index}: ${printLine.source} => ${printLine.target} (delete source: ${printLine.deleteSource})`)
+        })
     }
 }
