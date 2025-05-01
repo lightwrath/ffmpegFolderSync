@@ -11,12 +11,12 @@ export default class Controller {
     public static async load(syncLocation: string) {
         const loadSettings = Config.get().syncLocations.find(location => location.name === syncLocation);
         if (!loadSettings) throw new Error("Is not a valid sync location!");
-        const { source, target } = loadSettings;
+        const { source, target, deleteSource } = loadSettings;
         const pathType = await FileSystem.type(source)
         if (pathType === "directory") {
             const files = await FileSystem.lsFilesRecursive(source)
             files.forEach(file => {
-                this.queue.add(file, FileSystem.pathSourceToTarget(source, target, file))
+                this.queue.add(file, FileSystem.pathSourceToTarget(source, target, file), deleteSource)
             });
         } else if (pathType === "file") {
             this.queue.add(source, target);
