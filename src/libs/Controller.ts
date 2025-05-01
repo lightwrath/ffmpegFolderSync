@@ -39,7 +39,8 @@ export default class Controller {
                 await conversion.execute()
                 if (next.deleteSource) await FileSystem.delete(next.source)
                 this.queue.handleNext()
-            } catch (_) {
+            } catch (error) {
+                console.log(error)
                 this.failureList.add(this.queue.getNext().source, this.queue.handleNext().target)
             }
         }
