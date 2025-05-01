@@ -34,6 +34,7 @@ export default class Controller {
             try {
                 const isVerified = await conversion.validate()
                 if (!isVerified) throw new Error("Source file seems to be invalid.")
+                await FileSystem.ensureFolder(next.target)
                 await conversion.execute()
                 if (next.deleteSource) await FileSystem.delete(next.source)
                 this.queue.handleNext()

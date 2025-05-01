@@ -1,4 +1,4 @@
-import { readdir } from "node:fs/promises"
+import { readdir, mkdir } from "node:fs/promises"
 
 export default class FileSystem {
     public static async type(path: string) {
@@ -15,6 +15,14 @@ export default class FileSystem {
         }
         console.error(error)
         return "unknown"
+    }
+
+    public static async ensureFolder(path: string) {
+        try {
+            await readdir(path)
+        } catch (e) {
+            await mkdir(path, { recursive: true })
+        }
     }
 
     public static async ls(path: string) {
