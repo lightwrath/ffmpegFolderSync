@@ -51,6 +51,6 @@ export default class Controller {
     }
 
     public static printQueue() {
-        console.log(this.queue.get())
+        console.table(this.queue.get())
     }
 }

@@ -6,10 +6,6 @@ export default class Queue {
         return structuredClone(this.list)
     }
 
-    public isNext() {
-        return this.list.length > 0
-    }
-
     public getNext(){
         const nextItem = this.list[0]
         if (nextItem === undefined) throw new Error("Attempting to get next when queue is empty")
