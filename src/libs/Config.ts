@@ -2,15 +2,15 @@ import config from "../config.json"
 
 class Config {
    private current: IConfig = config as IConfig
-    
+
     constructor() {
        this.verify()
     }
-    
+
     public get() {
        return structuredClone(this.current)
     }
-    
+
     public verify() {
         if (!this.current.syncLocations) throw new Error("Config: syncLocations array is required")
         this.current.syncLocations.forEach(location => {
@@ -27,6 +27,7 @@ interface IConfig {
 }
 interface ISyncLocation {
     name: string;
+    deleteSource?: boolean;
     source: string;
     target: string;
 }

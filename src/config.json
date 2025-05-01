@@ -3,6 +3,7 @@
   "syncLocations": [
     {
       "name": "primary",
+      "deleteSource": true,
       "source": "/mnt/pve/Vault/Users/lightwrath/Code/ffmpeg/queue",
       "target": "/mnt/pve/Vault/Users/lightwrath/Code/ffmpeg/complete"
     }

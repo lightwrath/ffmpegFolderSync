@@ -38,4 +38,9 @@ export default class FileSystem {
     public static pathSourceToTarget(source: string, target: string, filePath: string) {
         return filePath.replace(source, target);
     }
+
+    public static async delete(path: string) {
+        const file = Bun.file(path)
+        await file.delete()
+    }
 }

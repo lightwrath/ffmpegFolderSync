@@ -7,7 +7,7 @@ export default class Controller {
     public static queue = new Queue();
     public static failureList = new Queue();
     public static processingQueue = false
-    
+
     public static async load(syncLocation: string) {
         const loadSettings = Config.get().syncLocations.find(location => location.name === syncLocation);
         if (!loadSettings) throw new Error("Is not a valid sync location!");
@@ -25,7 +25,7 @@ export default class Controller {
         }
         this.printQueue()
     }
-    
+
     public static async start() {
         this.processingQueue = true
         while (this.processingQueue) {
@@ -35,17 +35,18 @@ export default class Controller {
                 const isVerified = await conversion.validate()
                 if (!isVerified) throw new Error("Source file seems to be invalid.")
                 await conversion.execute()
+                if (next.deleteSource) await FileSystem.delete(next.source)
                 this.queue.handleNext()
             } catch (_) {
                 this.failureList.add(this.queue.getNext().source, this.queue.handleNext().target)
             }
         }
     }
-    
+
     public static stop() {
         this.processingQueue = false
     }
-    
+
     public static printQueue() {
         console.log(this.queue.get())
     }
