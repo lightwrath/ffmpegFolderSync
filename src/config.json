@@ -1,5 +1,5 @@
 {
-  "ffmpegPath": "/mnt/pve/Vault/Users/lightwrath/Code/ffmpeg/ffmpeg_source/ffmpeg",
+  "ffmpegPath": "/mnt/pve/Vault/Users/lightwrath/Code/ffmpeg/bin",
   "syncLocations": [
     {
       "name": "primary",
