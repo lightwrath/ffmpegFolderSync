@@ -51,4 +51,21 @@ export default class FileSystem {
         const file = Bun.file(path)
         await file.delete()
     }
+
+    public static async resolveLocationToFileList(source: string, target: string) {
+        const pathType = await FileSystem.type(source)
+        if (pathType === "directory") {
+            const files = await FileSystem.lsFilesRecursive(source)
+            return files.map(file => {
+                return {
+                    source: file,
+                    target: FileSystem.pathSourceToTarget(source, target, file)
+                }
+            })
+        } else if (pathType === "file") {
+            return [{ source, target }]
+        } else {
+            throw new Error(`Given source path ${source} or the target path could not be resolved ${target}`)
+        }
+    }
 }

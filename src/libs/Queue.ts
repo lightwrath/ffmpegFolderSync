@@ -34,6 +34,48 @@ export default class Queue {
     public length() {
         return this.list.length;
     }
+
+    public toHumanReadable() {
+        interface ITableFormat {
+            location: string;
+            source: string;
+            target: string;
+            deleteSource: boolean;
+        }
+        const table: Array<ITableFormat> = this.list.map(entry => {
+            const sourceArray = entry.source.split("/")
+            const targetArray = entry.target.split("/")
+            let locationArray = []
+            for (let i = 0; i < sourceArray.length; i++) {
+                if (sourceArray[i] === targetArray[i]) {
+                    locationArray.push(sourceArray[i])
+                } else {
+                    break;
+                }
+            }
+            const location = locationArray.join("/")
+            return {
+                location,
+                source: entry.source.replace(location, ""),
+                target: entry.target.replace(location, ""),
+                deleteSource: entry.deleteSource
+            }
+        })
+        let previousLocation = ""
+        const readableList: Array<string> = []
+        table.forEach((printLine, index) => {
+            if (printLine.location !== previousLocation) {
+                readableList.push(`${printLine.location}:`)
+                previousLocation = printLine.location
+            }
+            // Limit the length to a total 120
+            const printIndex = index.toString().padStart(4, "0")
+            const printSource = printLine.source.substring(0, 49)
+            const printTarget = printLine.source.substring(0, 49)
+            readableList.push(`${printIndex}: ${printSource} => ${printTarget} - ${printLine.deleteSource}`)
+        })
+        return readableList;
+    }
 }
 
 interface IEntry {

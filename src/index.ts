@@ -1,21 +1,36 @@
 import Controller from "./libs/Controller.ts";
 
-for await (const line of console) {
-    const commandSegments = line.split(" ");
-    processCommand(commandSegments);
-}
-function processCommand(command: Array<string>) {
-    if (command[0] === "load") {
-        if (!command[1]) return console.error("Load command requires a sync location name")
-        return Controller.load(command[1]);
+async function getStdin() {
+    for await (const line of console) {
+        if (line) {
+            return line
+        }
     }
-    if (command[0] === "print") {
+}
+
+async function terminalInterface() {
+    const mainCommand = await getStdin()
+    if (mainCommand === "load") {
+        console.write("Sync location name: ")
+        const loadCommand = await getStdin()
+        if (!loadCommand) return console.error("Load command requires a sync location name")
+        return Controller.load({ configSyncLocationName: loadCommand });
+    }
+    if (mainCommand === "print") {
         return Controller.printQueue()
     }
-    if (command[0] === "start") {
+    if (mainCommand === "start") {
         return Controller.start();
     }
-    if (command[0] === "stop") {
+    if (mainCommand === "stop") {
         return Controller.stop()
+    }
+}
+
+while (true) {
+    try {
+        await terminalInterface()
+    } catch (error) {
+        console.error(error)
     }
 }

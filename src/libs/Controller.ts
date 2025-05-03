@@ -8,21 +8,11 @@ export default class Controller {
     public static failureList = new Queue();
     public static processingQueue = false
 
-    public static async load(syncLocation: string) {
-        const loadSettings = Config.get().syncLocations.find(location => location.name === syncLocation);
-        if (!loadSettings) throw new Error("Is not a valid sync location!");
+    public static async load(loadParams: ILoadParams) {
+        const loadSettings = Config.syncLocationQuery({ name: loadParams.configSyncLocationName });
         const { source, target, deleteSource } = loadSettings;
-        const pathType = await FileSystem.type(source)
-        if (pathType === "directory") {
-            const files = await FileSystem.lsFilesRecursive(source)
-            files.forEach(file => {
-                this.queue.add(file, FileSystem.pathSourceToTarget(source, target, file), deleteSource)
-            });
-        } else if (pathType === "file") {
-            this.queue.add(source, target);
-        } else {
-            console.error("Can't add to queue", source, target);
-        }
+        const fileList = await FileSystem.resolveLocationToFileList(source, target);
+        fileList.forEach(file => this.queue.add(file.source, file.target, deleteSource))
         this.printQueue()
     }
 
@@ -51,42 +41,13 @@ export default class Controller {
     }
 
     public static printQueue() {
-        interface ITableFormat {
-            location: string;
-            source: string;
-            target: string;
-            deleteSource: boolean;
-        }
-        const printQueue: Array<ITableFormat> = this.queue.get().map(entry => {
-            const sourceArray = entry.source.split("/")
-            const targetArray = entry.target.split("/")
-            let locationArray = []
-            for (let i = 0; i < sourceArray.length; i++) {
-               if (sourceArray[i] === targetArray[i]) {
-                   locationArray.push(sourceArray[i])
-               } else {
-                   break;
-               }
-            }
-            const location = locationArray.join("/")
-            return {
-                location,
-                source: entry.source.replace(location, ""),
-                target: entry.target.replace(location, ""),
-                deleteSource: entry.deleteSource
-            }
-        })
-        let previousLocation = ""
-        printQueue.forEach((printLine, index) => {
-            if (printLine.location !== previousLocation) {
-                console.log(`${printLine.location}:`)
-                previousLocation = printLine.location
-            }
-            // Limit the length to a total 120
-            const printIndex = index.toString().padStart(4, "0") + ":"
-            const printSource = printLine.source.substring(0, 49)
-            const printTarget = printLine.source.substring(0, 49)
-            console.log(printIndex, printSource, "=>", printTarget, "-", printLine.deleteSource)
-        })
+        this.queue.toHumanReadable().forEach(line => console.log(line))
     }
+}
+
+interface ILoadParams {
+    configSyncLocationName: string;
+    source?: string;
+    target?: string;
+    deleteSource?: boolean;
 }

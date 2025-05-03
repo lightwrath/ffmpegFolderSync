@@ -19,6 +19,12 @@ class Config {
             if (!location.target) throw new Error("Config: syncLocations: target string is required")
         })
     }
+
+    public syncLocationQuery(query: { name: string }) {
+        const syncLocation = this.current.syncLocations.find(location => location.name === query.name);
+        if (!syncLocation) throw new Error("Is not a valid sync location!");
+        return syncLocation
+    }
 }
 
 interface IConfig {
