@@ -79,7 +79,7 @@ export default class Queue {
             // Limit the length to a total 120
             const printIndex = index.toString().padStart(4, "0")
             const printSource = printLine.source.substring(0, 49)
-            const printTarget = printLine.source.substring(0, 49)
+            const printTarget = printLine.target.substring(0, 49)
             readableList.push(`${printIndex}: ${printSource} => ${printTarget} - ${printLine.deleteSource}`)
         })
         return readableList;
