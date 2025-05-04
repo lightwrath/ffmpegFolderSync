@@ -34,7 +34,7 @@ async function terminalInterface() {
             const source = await prompt("Source path: ")
             const target = await prompt("Target path: ")
             const deleteSource = await prompt("Delete source file? (y/n): ")
-            return Controller.queue.add(source, target, deleteSource === "y")
+            return Controller.queueAdd(source, target, deleteSource === "y")
         }
         if (queueCommand === "position") {
             const from = await prompt("Provide index to move from: ")

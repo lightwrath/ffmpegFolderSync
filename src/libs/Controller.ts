@@ -16,6 +16,12 @@ export default class Controller {
         this.printQueue()
     }
 
+    public static async queueAdd(source: string, target: string, deleteSource = false) {
+        const fileList = await FileSystem.resolveLocationToFileList(source, target);
+        fileList.forEach(file => this.queue.add(file.source, file.target, deleteSource))
+        this.printQueue()
+    }
+
     public static async start() {
         this.processingQueue = true
         while (this.processingQueue) {
