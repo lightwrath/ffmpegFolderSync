@@ -11,7 +11,7 @@
       "name": "server.movies",
       "deleteSource": true,
       "source": "/mnt/pve/Vault/Media/legacy/movies",
-      "target": "/mnt/pve/Vault/Media/movies/"
+      "target": "/mnt/pve/Vault/Media/movies"
     },
     {
       "name": "server.tv",
