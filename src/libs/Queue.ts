@@ -2,10 +2,6 @@
 export default class Queue {
     private list: Array<IEntry> = [];
 
-    public get() {
-        return structuredClone(this.list)
-    }
-
     public getNext(){
         const nextItem = this.list[0]
         if (nextItem === undefined) throw new Error("Attempting to get next when queue is empty")
@@ -33,6 +29,14 @@ export default class Queue {
 
     public length() {
         return this.list.length;
+    }
+
+    public reposition(fromIndex: number, toIndex: number) {
+        if (fromIndex >= this.list.length || toIndex >= this.list.length || fromIndex < 0 || toIndex < 0) throw new Error(
+            `Cannot reposition from index ${fromIndex} to index ${toIndex} as the index is out of bounds`
+        )
+        const entry = this.list.splice(fromIndex, 1)[0]
+        if (entry) this.list.splice(toIndex, 0, entry)
     }
 
     public toHumanReadable() {

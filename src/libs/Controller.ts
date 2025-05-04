@@ -40,6 +40,10 @@ export default class Controller {
         this.processingQueue = false
     }
 
+    public static repositionInQueue(fromIndex: number, toIndex: number) {
+        this.queue.reposition(fromIndex, toIndex)
+    }
+
     public static printQueue() {
         this.queue.toHumanReadable().forEach(line => console.log(line))
     }
