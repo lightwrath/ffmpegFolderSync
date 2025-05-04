@@ -44,6 +44,9 @@ async function terminalInterface() {
         if (queueCommand === "clear") {
             return Controller.queue.empty()
         }
+        if (queueCommand === "debug") {
+            return console.log(Controller.queue.getList())
+        }
     }
     if (mainCommand === "start") {
         return Controller.start();

@@ -44,7 +44,10 @@ export default class Controller {
         this.queue.reposition(fromIndex, toIndex)
     }
 
-    public static printQueue() {
+    public static printQueue(raw = false) {
+        if (raw) {
+            return console.log(this.queue.getList())
+        }
         this.queue.toHumanReadable().forEach(line => console.log(line))
     }
 }

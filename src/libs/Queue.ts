@@ -2,6 +2,10 @@
 export default class Queue {
     private list: Array<IEntry> = [];
 
+    public getList() {
+        return structuredClone(this.list)
+    }
+
     public getNext(){
         const nextItem = this.list[0]
         if (nextItem === undefined) throw new Error("Attempting to get next when queue is empty")
