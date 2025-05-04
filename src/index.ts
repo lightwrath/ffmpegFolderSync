@@ -16,11 +16,7 @@ async function prompt(stdout: string) {
 
 async function terminalInterface() {
     const mainCommand = await prompt(
-        "Available commands:\n" +
-        "load - load from config\n" +
-        "queue - queue options\n" +
-        "start - start processing\n" +
-        "stop - stop processing"
+        "Available commands: load - load from config, queue - queue options, start - start processing, stop - stop processing: "
     )
     if (mainCommand === "load") {
         const loadCommand = await prompt("Sync location name: ")
@@ -29,10 +25,7 @@ async function terminalInterface() {
     }
     if (mainCommand === "queue") {
         const queueCommand = await prompt(
-            "Available options:\n" +
-            "print - list current queue\n" +
-            "add - add conversion to queue\n" +
-            "clear - clear queue"
+            "Available options: print - list current queue, add - add conversion to queue, position - reposition conversion in queue, clear - clear queue: "
         )
         if (queueCommand === "print") {
             return Controller.printQueue()
