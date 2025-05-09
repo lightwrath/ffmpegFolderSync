@@ -49,10 +49,14 @@ async function terminalInterface() {
         }
     }
     if (mainCommand === "start") {
-        return Controller.start();
+        Controller.start()
+            .then(() => console.log("Processing complete"))
+            .catch(error => console.error(error))
+        return;
     }
     if (mainCommand === "stop") {
-        return Controller.stop()
+        Controller.stop()
+        return;
     }
 }
 
