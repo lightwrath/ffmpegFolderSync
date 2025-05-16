@@ -12,7 +12,13 @@ export default class Controller {
         const loadSettings = Config.syncLocationQuery({ name: loadParams.configSyncLocationName });
         const { source, target, deleteSource } = loadSettings;
         const fileList = await FileSystem.resolveLocationToFileList(source, target);
-        fileList.forEach(file => this.queue.add(file.source, file.target, deleteSource))
+        fileList.forEach(file => {
+            try {
+                this.queue.add(file.source, file.target, deleteSource)
+            } catch (error) {
+                return
+            }
+        })
         this.printQueue()
     }
 
