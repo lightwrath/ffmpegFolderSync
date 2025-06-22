@@ -44,7 +44,6 @@ export default class Conversion {
         commandSegments.push("16")
 
         commandSegments.push(this.targetFile)
-
         const process = new Process(commandSegments);
         return process.awaitExit()
     }
