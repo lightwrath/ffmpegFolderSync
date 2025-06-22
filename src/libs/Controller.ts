@@ -1,6 +1,7 @@
 import FileSystem from "./FileSystem.ts";
 import Queue from "./Queue.ts";
 import Conversion from "./Conversion.ts";
+import Log from "./Log.ts";
 import Config from "./Config.ts";
 
 export default class Controller {
@@ -16,7 +17,7 @@ export default class Controller {
             try {
                 this.queue.add(file.source, file.target, deleteSource)
             } catch (error) {
-                return
+                return Log.error("Failed to load " + file.source);
             }
         })
         this.printQueue()
@@ -34,7 +35,7 @@ export default class Controller {
             const next = this.queue.getNext()
             const conversion = new Conversion(next.source, next.target)
             try {
-                if (!(await conversion.isValid())) throw new Error("Source file seems to be invalid.")
+                if (!(await conversion.isValid())) Log.error("Source file seems to be invalid: " + next.source)
                 const targetFolder = next.target.split("/")
                 targetFolder.pop()
                 await FileSystem.ensureFolder(targetFolder.join("/"))
@@ -42,8 +43,9 @@ export default class Controller {
                 if (next.deleteSource) await FileSystem.delete(next.source)
                 this.queue.handleNext()
             } catch (error) {
-                console.log(error)
+                Log.error("Conversion failed: " + error)
                 this.failureList.add(this.queue.getNext().source, this.queue.handleNext().target)
+                Log.error(this.failureList.toHumanReadable().join("\n"))
             }
         }
     }
