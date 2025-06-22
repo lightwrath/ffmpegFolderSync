@@ -4,7 +4,7 @@ export default class Log {
     }
 
     private static async out(message: string) {
-        await Bun.write("log", message)
+        await Bun.write(import.meta.dir + "/log", message)
     }
 
     public static info(message: string): void {
