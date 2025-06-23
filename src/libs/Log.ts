@@ -16,12 +16,12 @@ export default class Log {
     }
 
     public static info(message: string): void {
-        const errorMeesage = [this.date(), "info", message].join(" - ")
+        const errorMeesage = [this.date(), "info", message, "\n\r"].join(" - ")
         this.out(errorMeesage)
     }
 
     public static error(message: string): void {
-        const errorMeesage = [this.date(), "error", message].join(" - ")
+        const errorMeesage = [this.date(), "error", message, "\n\r"].join(" - ")
         this.out(errorMeesage)
     }
 }
