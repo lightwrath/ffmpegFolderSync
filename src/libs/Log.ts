@@ -1,5 +1,5 @@
-const logFile = import.meta.dir + "/log.txt"
-console.log("Logging to: ", logFile)
+const logFilePath = import.meta.dir + "/log.txt"
+console.log("Logging to: ", logFilePath)
 
 export default class Log {
     private static date() {
@@ -7,7 +7,12 @@ export default class Log {
     }
 
     private static async out(message: string) {
-        await Bun.write(logFile, message)
+        try {
+            const logs = await Bun.file(logFilePath).text();
+            await Bun.write(logFilePath, logs.concat(message));
+        } catch (_) {
+            await Bun.write(logFilePath, message);
+        }
     }
 
     public static info(message: string): void {
