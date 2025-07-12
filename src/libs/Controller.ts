@@ -35,7 +35,7 @@ export default class Controller {
             const next = this.queue.getNext()
             const conversion = new Conversion(next.source, next.target)
             try {
-                if (!(await conversion.isValid())) Log.error("Source file seems to be invalid: " + next.source)
+                if (!(await conversion.isValid())) throw new Error("Source file seems to be invalid: " + next.source)
                 const targetFolder = next.target.split("/")
                 targetFolder.pop()
                 await FileSystem.ensureFolder(targetFolder.join("/"))
