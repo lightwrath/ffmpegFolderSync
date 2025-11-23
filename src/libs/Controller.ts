@@ -32,15 +32,16 @@ export default class Controller {
     public static async start() {
         this.processingQueue = true
         while (this.processingQueue) {
-            const next = this.queue.getNext()
-            const conversion = new Conversion(next.source, next.target)
+            const current = this.queue.getNext()
+            const conversion = new Conversion(current.source, current.target)
             try {
-                if (!(await conversion.isValid())) throw new Error("Source file seems to be invalid: " + next.source)
-                const targetFolder = next.target.split("/")
+                if (!(await conversion.isValid())) return new Error("Source file seems to be invalid: " + current.source)
+                const targetFolder = current.target.split("/")
                 targetFolder.pop()
                 await FileSystem.ensureFolder(targetFolder.join("/"))
+                await FileSystem.delete(current.target)
                 await conversion.execute()
-                if (next.deleteSource) await FileSystem.delete(next.source)
+                if (current.deleteSource) await FileSystem.delete(current.source)
                 this.queue.handleNext()
             } catch (error) {
                 Log.error("Conversion failed: " + error)
