@@ -39,7 +39,7 @@ export default class Controller {
                 const targetFolder = current.target.split("/")
                 targetFolder.pop()
                 await FileSystem.ensureFolder(targetFolder.join("/"))
-                await FileSystem.delete(current.target)
+                if (await FileSystem.ensureFile(current.target)) await FileSystem.delete(current.target)
                 await conversion.execute()
                 if (current.deleteSource) await FileSystem.delete(current.source)
                 this.queue.handleNext()

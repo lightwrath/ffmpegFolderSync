@@ -25,6 +25,11 @@ export default class FileSystem {
         }
     }
 
+    public static async ensureFile(path: string) {
+        const file = Bun.file(path)
+        return await file.exists();
+    }
+
     public static async ls(path: string) {
         if (await this.type(path) !== "directory") throw new Error("path must be a directory")
         return readdir(path)
