@@ -35,7 +35,7 @@ export default class Conversion {
         commandSegments.push("0")
 
         commandSegments.push("-pix_fmt")
-        commandSegments.push("yuv444p10le")
+        commandSegments.push("yuv420p10le")
 
         commandSegments.push("-preset")
         commandSegments.push("4")
