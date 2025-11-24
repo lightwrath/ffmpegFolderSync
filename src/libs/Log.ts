@@ -1,3 +1,4 @@
+import { appendFile } from "node:fs/promises"
 const logFilePath = import.meta.dir + "/log.txt"
 console.log("Logging to: ", logFilePath)
 
@@ -8,8 +9,7 @@ export default class Log {
 
     private static async out(message: string) {
         try {
-            const logs = await Bun.file(logFilePath).text();
-            await Bun.write(logFilePath, logs.concat(message));
+            await appendFile(logFilePath, message)
         } catch (_) {
             await Bun.write(logFilePath, message);
         }
