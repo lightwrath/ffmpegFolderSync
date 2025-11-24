@@ -22,26 +22,35 @@ export default class Conversion {
         commandSegments.push("-i")
         commandSegments.push(this.sourceFile)
 
+        commandSegments.push("-fflags");
+        commandSegments.push("+genpts");
+
+        commandSegments.push("-avoid_negative_ts");
+        commandSegments.push("make_zero");
+
         commandSegments.push("-c:v");
         commandSegments.push("libsvtav1");
 
-        commandSegments.push("-c:a")
-        commandSegments.push("copy")
+        commandSegments.push("-c:a");
+        commandSegments.push("copy");
 
-        commandSegments.push("-c:s")
-        commandSegments.push("copy")
+        commandSegments.push("-c:s");
+        commandSegments.push("copy");
 
-        commandSegments.push("-map")
-        commandSegments.push("0")
+        commandSegments.push("-map");
+        commandSegments.push("0");
 
-        commandSegments.push("-pix_fmt")
-        commandSegments.push("yuv420p10le")
+        commandSegments.push("-pix_fmt");
+        commandSegments.push("yuv420p10le");
 
-        commandSegments.push("-preset")
-        commandSegments.push("4")
+        commandSegments.push("-preset");
+        commandSegments.push("4");
 
-        commandSegments.push("-crf")
-        commandSegments.push("16")
+        commandSegments.push("-crf");
+        commandSegments.push("16");
+
+        commandSegments.push("-vsync");
+        commandSegments.push("1");
 
         commandSegments.push(this.targetFile)
         const process = new Process(commandSegments);
