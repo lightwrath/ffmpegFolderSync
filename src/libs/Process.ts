@@ -2,6 +2,8 @@ import Log from "./Log.ts";
 
 export default class Process {
     private subprocess: Bun.Subprocess
+    private stdoutCache: string = ""
+    private stderrCache: string = ""
 
     constructor(cmd: Array<string>) {
         Log.info("Process started with: " + cmd.join(" "))
@@ -13,14 +15,18 @@ export default class Process {
     private async logStdout() {
         if (!this.subprocess.stdout || typeof this.subprocess.stdout == "number" ) return Log.error("No stdout stream for process")
         for await (const stdout of this.subprocess.stdout) {
-            Log.info(new TextDecoder().decode(stdout));
+            const text = new TextDecoder().decode(stdout);
+            this.stdoutCache += text
+            Log.info(text);
         }
     }
 
     private async logStderr() {
         if (!this.subprocess.stderr || typeof this.subprocess.stderr == "number" ) return Log.error("No stderr stream for process")
         for await (const stderr of this.subprocess.stderr) {
-            Log.info(new TextDecoder().decode(stderr));
+            const text = new TextDecoder().decode(stderr);
+            this.stderrCache += text
+            Log.info(text);
         }
     }
 
@@ -30,21 +36,13 @@ export default class Process {
 
     public async hasError() {
         await this.subprocess.exited
-        if (this.subprocess.stderr instanceof ReadableStream) {
-            const stderr = await Bun.readableStreamToText(this.subprocess.stderr)
-            Log.info("Process stderr: " + stderr)
-            if (stderr.length > 0) return true
-        }
-        return false;
+        Log.info("Process stderr: " + this.stderrCache)
+        return this.stderrCache.length > 0;
     }
 
     public async getOutput() {
         await this.subprocess.exited
-        if (this.subprocess.stdout instanceof ReadableStream) {
-            const stdout = Bun.readableStreamToText(this.subprocess.stdout)
-            Log.info("Process stdout: " + stdout)
-            return stdout;
-        }
-
+        Log.info("Process stdout: " + this.stdoutCache)
+        return this.stdoutCache
     }
 }

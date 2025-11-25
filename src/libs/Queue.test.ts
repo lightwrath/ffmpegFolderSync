@@ -17,16 +17,16 @@ describe("Queue", () => {
         try {
             queue.add("/home/user/source/second.mkv", "/home/user/target/second.mkv");
         } catch (error) {
-           expect(error).toBeInstanceOf(Error); 
+           expect(error).toBeInstanceOf(Error);
         }
     });
 
     it('should be able determine if an item is queued or not', () => {
         const queue = new Queue();
         queue.add("/home/user/source/first.mkv", "/home/user/target/first.mkv");
-        expect(queue.isQueued("/home/user/source/second.mkv", "/home/user/target/second.mkv")).toBe(false);
+        expect(queue.isPresent("/home/user/source/second.mkv", "/home/user/target/second.mkv")).toBe(false);
         queue.add("/home/user/source/second.mkv", "/home/user/target/second.mkv");
-        expect(queue.isQueued("/home/user/source/second.mkv", "/home/user/target/second.mkv")).toBe(true);
+        expect(queue.isPresent("/home/user/source/second.mkv", "/home/user/target/second.mkv")).toBe(true);
     });
 
     it('should be able to empty the queue', () => {
@@ -37,15 +37,15 @@ describe("Queue", () => {
         expect(queue.length()).toEqual(0);
     });
 
-    it('should be able to get the next item or handle the next item, with it being removed from the queue after', () => {
+    it('should be able to get the next item or handle the next item, with it being marked from the queue after', () => {
         const queue = new Queue();
         queue.add("/home/user/source/first.mkv", "/home/user/target/first.mkv");
         queue.add("/home/user/source/second.mkv", "/home/user/target/second.mkv");
-        const firstFile = queue.handleNext()
+        const firstFile = queue.setDone(queue.next().id)
         expect(firstFile.source).toEqual("/home/user/source/first.mkv");
-        expect(queue.length()).toEqual(1);
-        const secondFile = queue.getNext();
+        expect(queue.length()).toEqual(2);
+        const secondFile = queue.next();
         expect(secondFile.source).toEqual("/home/user/source/second.mkv");
-        expect(queue.length()).toEqual(1);
+        expect(queue.length()).toEqual(2);
     });
 })

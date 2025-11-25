@@ -1,46 +1,54 @@
 
 export default class Queue {
-    private list: Array<IEntry> = [];
+    private queue: Array<IEntry> = [];
 
-    public getList() {
-        return structuredClone(this.list)
+    public list() {
+        return structuredClone(this.queue)
     }
 
-    public getNext(){
-        const nextItem = this.list[0]
-        if (nextItem === undefined) throw new Error("Attempting to get next when queue is empty")
-        return nextItem
+    public next(){
+        const nextEntry = this.queue.find(entry => entry.status === "pending")
+        if (nextEntry === undefined) throw new Error("Attempting to get next when queue is empty")
+        return nextEntry
     }
 
-    public handleNext() {
-        const nextItem = this.list.shift()
-        if (nextItem === undefined) throw new Error("Attempting to handle next when queue is empty")
-        return nextItem
+    public setDone(id: string) {
+        const entry = this.queue.find(entry => entry.id === id)
+        if (entry === undefined) throw new Error("Attempting to mark an entry as complete that does not exist")
+        entry.status = "done"
+        return entry
     }
 
-   public isQueued(source: string, target: string) {
-       return this.list.some(entry => entry.source === source && entry.target === target)
+    public setError(id: string) {
+        const entry = this.queue.find(entry => entry.id === id)
+        if (entry === undefined) throw new Error("Attempting to mark an entry as error that does not exist")
+        entry.status = "error"
+        return entry
+    }
+
+   public isPresent(source: string, target: string) {
+       return this.queue.some(entry => entry.source === source && entry.target === target)
    }
 
     public add(source: string, target: string, deleteSource = false) {
-        if (this.isQueued(source, target)) throw new Error("Cannot add duplicate entry")
-        this.list.push({ source, target, deleteSource})
+        if (this.isPresent(source, target)) throw new Error("Cannot add duplicate entry")
+        this.queue.push({ id: crypto.randomUUID(), source, target, deleteSource, status: "pending" })
     }
 
     public empty() {
-        this.list = []
+        this.queue = []
     }
 
     public length() {
-        return this.list.length;
+        return this.queue.length;
     }
 
     public reposition(fromIndex: number, toIndex: number) {
-        if (fromIndex >= this.list.length || toIndex >= this.list.length || fromIndex < 0 || toIndex < 0) throw new Error(
+        if (fromIndex >= this.queue.length || toIndex >= this.queue.length || fromIndex < 0 || toIndex < 0) throw new Error(
             `Cannot reposition from index ${fromIndex} to index ${toIndex} as the index is out of bounds`
         )
-        const entry = this.list.splice(fromIndex, 1)[0]
-        if (entry) this.list.splice(toIndex, 0, entry)
+        const entry = this.queue.splice(fromIndex, 1)[0]
+        if (entry) this.queue.splice(toIndex, 0, entry)
     }
 
     public toHumanReadable() {
@@ -49,8 +57,9 @@ export default class Queue {
             source: string;
             target: string;
             deleteSource: boolean;
+            status: IEntry['status']
         }
-        const table: Array<ITableFormat> = this.list.map(entry => {
+        const table: Array<ITableFormat> = this.queue.map(entry => {
             const sourceArray = entry.source.split("/")
             const targetArray = entry.target.split("/")
             let locationArray = []
@@ -66,7 +75,8 @@ export default class Queue {
                 location,
                 source: entry.source.replace(location, ""),
                 target: entry.target.replace(location, ""),
-                deleteSource: entry.deleteSource
+                deleteSource: entry.deleteSource,
+                status: entry.status
             }
         })
         let previousLocation = ""
@@ -80,14 +90,16 @@ export default class Queue {
             const printIndex = index.toString().padStart(4, "0")
             const printSource = printLine.source.substring(0, 49)
             const printTarget = printLine.target.substring(0, 49)
-            readableList.push(`${printIndex}: ${printSource} => ${printTarget} - ${printLine.deleteSource}`)
+            readableList.push(`${printIndex}: ${printSource} => ${printTarget} - ${printLine.deleteSource} - ${printLine.status}`)
         })
         return readableList;
     }
 }
 
 interface IEntry {
+    id: string;
     deleteSource: boolean
     source: string;
     target: string;
+    status: "pending" | "done" | "error";
 }

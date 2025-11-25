@@ -6,7 +6,6 @@ import Config from "./Config.ts";
 
 export default class Controller {
     public static queue = new Queue();
-    public static failureList = new Queue();
     public static processingQueue = false
 
     public static async load(loadParams: ILoadParams) {
@@ -32,7 +31,7 @@ export default class Controller {
     public static async start() {
         this.processingQueue = true
         while (this.processingQueue) {
-            const current = this.queue.getNext()
+            const current = this.queue.next()
             const conversion = new Conversion(current.source, current.target)
             try {
                 if (!(await conversion.isValid())) return new Error("Source file seems to be invalid: " + current.source)
@@ -42,11 +41,10 @@ export default class Controller {
                 if (await FileSystem.ensureFile(current.target)) await FileSystem.delete(current.target)
                 await conversion.execute()
                 if (current.deleteSource) await FileSystem.delete(current.source)
-                this.queue.handleNext()
+                this.queue.setDone(current.id)
             } catch (error) {
                 Log.error("Conversion failed: " + error)
-                this.failureList.add(this.queue.getNext().source, this.queue.handleNext().target)
-                Log.error(this.failureList.toHumanReadable().join("\n"))
+                this.queue.setError(current.id);
             }
         }
     }
@@ -61,7 +59,7 @@ export default class Controller {
 
     public static printQueue(raw = false) {
         if (raw) {
-            return console.log(this.queue.getList())
+            return console.log(this.queue.list())
         }
         this.queue.toHumanReadable().forEach(line => console.log(line))
     }
