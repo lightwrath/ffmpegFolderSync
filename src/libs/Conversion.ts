@@ -32,7 +32,7 @@ export default class Conversion {
         commandSegments.push("libsvtav1");
 
         commandSegments.push("-c:a");
-        commandSegments.push("copy");
+        commandSegments.push("flac");
 
         commandSegments.push("-c:s");
         commandSegments.push("copy");
