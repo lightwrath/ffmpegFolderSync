@@ -28,17 +28,17 @@ export default class Conversion {
         commandSegments.push("-avoid_negative_ts");
         commandSegments.push("make_zero");
 
+        commandSegments.push("-map");
+        commandSegments.push("0:v");
+
+        commandSegments.push("-map");
+        commandSegments.push("0:a");
+
         commandSegments.push("-c:v");
         commandSegments.push("libsvtav1");
 
         commandSegments.push("-c:a");
         commandSegments.push("flac");
-
-        commandSegments.push("-c:s");
-        commandSegments.push("srt");
-
-        commandSegments.push("-map");
-        commandSegments.push("0");
 
         commandSegments.push("-pix_fmt");
         commandSegments.push("yuv420p10le");
