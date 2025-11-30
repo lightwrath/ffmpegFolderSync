@@ -35,7 +35,7 @@ export default class Conversion {
         commandSegments.push("flac");
 
         commandSegments.push("-c:s");
-        commandSegments.push("srt");
+        commandSegments.push("copy");
 
         commandSegments.push("-map");
         commandSegments.push("0");
